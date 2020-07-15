@@ -1,0 +1,81 @@
+\documentclass[12pt,article,oneside]{memoir}
+% from https://github.com/kjhealy/pandoc-templates/blob/master/templates/xelatex.template
+
+\usepackage{fontspec}
+\defaultfontfeatures{
+    Path = /usr/local/texlive/2018/texmf-dist/fonts/opentype/public/fontawesome/ }
+\usepackage{fontawesome}
+\setmainfont{EBGaramond}[
+  Path = /Users/moacir/Library/Fonts/,
+  UprightFont = * ,
+  ItalicFont = *12-Italic ,
+  SmallCapsFont = *SC ,
+  Extension = .otf 
+  ]
+\setmonofont[Scale=0.8]{UbuntuMono-R}[
+  Path = /Users/moacir/Library/Fonts/,
+  UprightFont = * ,
+  ItalicFont = *I,
+  Extension = .ttf 
+  ]
+
+% Suppress section numbering
+\renewcommand\thesection{}
+\makeatletter
+\def\@seccntformat#1{\csname #1ignore\expandafter\endcsname\csname
+the#1\endcsname\quad}
+\let\sectionignore\@gobbletwo
+\let\latex@numberline\numberline
+\def\numberline#1{\if\relax#1\relax\else\latex@numberline{#1}\fi}
+\makeatother
+
+\usepackage[
+  unicode=true,
+	plainpages=false,
+	pdfpagelabels,
+	]{hyperref}
+
+\date{}
+
+\usepackage{graphicx}
+$if(letterhead)$
+\usepackage{eso-pic}
+\newcommand\BackgroundPic{
+  \put(0,0){%
+    \parbox[b][\paperheight]{\paperwidth}{%
+      \vfill
+      \centering
+      \Oldincludegraphics[width=\paperwidth,height=\paperheight,%
+      keepaspectratio]{$letterhead$}%
+      \vfill
+    }
+  }
+}
+$endif$
+
+$if(header)$
+\usepackage{fancyhdr}
+\pagestyle{fancy} % for fancy headers/footers
+\newcommand\datestyle{}
+\fancyhead{}
+\lfoot{}
+\cfoot{}% of \pageref{LastPage}}     % Use \thepage for counting page number
+\rfoot{\datestyle\datestyle\ $header$ \today, \thepage}
+\renewcommand{\headrulewidth}{0.0pt}
+$endif$
+
+% Layout
+\settrimmedsize{\stockheight}{\stockwidth}{*}	% Use entire page
+\settrims{0pt}{0pt}
+\setlrmarginsandblock{1in}{1in}{*}
+\setulmarginsandblock{1in}{1.2in}{*}
+\setmarginnotes{17pt}{51pt}{\onelineskip}
+\setheadfoot{\onelineskip}{2\onelineskip}
+\setheaderspaces{*}{2\onelineskip}{*}
+\checkandfixthelayout
+
+\begin{document}  
+
+$body$
+
+\end{document}

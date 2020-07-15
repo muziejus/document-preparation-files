@@ -1,0 +1,154 @@
+\documentclass[12pt,article,oneside]{memoir}
+$if(biblatex)$
+\printbibliography$if(biblio-title)$[title=References]$endif$
+
+$endif$
+% from https://github.com/kjhealy/pandoc-templates/blob/master/templates/xelatex.template
+
+\usepackage{layouts}[2001/04/29]
+% Use 8.5 x 11 inch page layout
+\input{moacir-memoir-layout-8.5x11}
+
+\usepackage{fontspec}
+\setmainfont{EB Garamond}[
+    Ligatures=Historic ,
+    Ligatures=Rare ,
+    Mapping=tex-text ,
+    ItalicFeatures={Style=Swash}
+  ]
+\usepackage[
+  unicode=true,
+	plainpages=false,
+	pdfpagelabels,
+	% pdftitle={\mytitle},
+	% pagebackref,
+	% pdfauthor={\myauthor},
+	% pdfkeywords={\keywords}
+	]{hyperref}
+
+$if(tables)$
+\usepackage{longtable}
+$endif$
+
+$if(graphics)$
+\usepackage{graphicx}
+% We will generate all images so they have a width \maxwidth. This means
+% that they will get their normal width if they fit onto the page, but
+% are scaled down if they would overflow the margins.
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+\else\Gin@nat@width\fi}
+\makeatother
+\let\Oldincludegraphics\includegraphics
+\renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=\maxwidth]{#1}}
+$endif$
+
+$if(title)$
+\title{\bigskip \bigskip $title$}
+$endif$ 
+
+%\author{$for(author)$$author$$sep$\\$endfor$}
+
+\author{$for(author)$\Large $author.name$\\
+\normalsize\emph{$author.affiliation$}\\
+\url{$author.email$}\vspace*{0.2in} $sep$ \and $endfor$}
+
+%\author{$for(author)$$author.name$ ($author.affiliation$)$sep$ \and $endfor$}
+
+\date{}
+
+$if(letterhead)$
+\usepackage{eso-pic}
+% \usepackage{graphicx}
+\newcommand\BackgroundPic{
+  \put(0,0){%
+    \parbox[b][\paperheight]{\paperwidth}{%
+      \vfill
+      \centering
+      \Oldincludegraphics[width=\paperwidth,height=\paperheight,%
+      keepaspectratio]{$letterhead$}%
+      \vfill
+    }
+  }
+}
+$endif$
+
+
+$if(header)$
+\usepackage{fancyhdr}
+\pagestyle{fancy} % for fancy headers/footers
+\newcommand\datestyle{}
+\fancyhead{}
+\lfoot{}
+\cfoot{}% of \pageref{LastPage}}     % Use \thepage for counting page number
+\rfoot{\datestyle\datestyle\ $header$ \today, \thepage}
+\renewcommand{\headrulewidth}{0.0pt}
+$endif$
+
+\begin{document}  
+
+$if(letterhead)$
+\AddToShipoutPicture*{\BackgroundPic}
+$endif$
+
+$if(graphics)$
+\setkeys{Gin}{width=1\textwidth}   
+$endif$
+
+$if(title)$
+\maketitle
+$endif$
+
+$if(toc)$
+{%
+\hypersetup{linkcolor=black}
+\setcounter{tocdepth}{$toc-depth$}
+\tableofcontents
+}
+$endif$
+
+$if(abstract)$
+
+\begin{abstract}
+
+\noindent $abstract$
+
+\end{abstract}
+
+$endif$
+
+$if(epigraph)$
+{\SingleSpacing
+  $for(epigraph)$
+    \epigraph{$epigraph.text$}{$epigraph.source$}
+  $endfor$
+}
+$endif$
+
+\DoubleSpacing
+
+$body$
+
+
+$if(natbib)$
+$if(biblio-files)$
+$if(biblio-title)$
+$if(book-class)$
+\renewcommand\bibname{Bibliography}
+$else$
+\renewcommand\refname{References}
+$endif$
+$endif$
+\bibliography{$biblio-files$}
+
+$endif$
+$endif$
+$if(biblatex)$
+\printbibliography$if(biblio-title)$[title=References]$endif$
+
+$endif$
+$for(include-after)$
+$include-after$
+
+$endfor$
+\end{document}

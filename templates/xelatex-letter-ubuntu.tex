@@ -1,0 +1,77 @@
+\documentclass[busletternofrom,12pt]{newlfm}
+
+\usepackage[english]{babel}	
+\usepackage{fontspec}		
+\setmainfont{Ubuntu}
+
+% newlfm broke itself by hardcoding variables.
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\@zfancyhead}{\fancy@reset}{\f@nch@reset}{}{}
+\patchcmd{\@set@em@up}{\f@ncyolh}{\f@nch@olh}{}{}
+\patchcmd{\@set@em@up}{\f@ncyolh}{\f@nch@olh}{}{}
+\patchcmd{\@set@em@up}{\f@ncyorh}{\f@nch@orh}{}{}
+\makeatother
+
+$if(letterhead)$
+\usepackage{eso-pic}
+% \usepackage{graphicx}
+\newcommand\BackgroundPic{
+  \put(0,0){%
+    \parbox[b][\paperheight]{\paperwidth}{%
+      \vfill
+      \centering
+      \includegraphics[width=\paperwidth,height=\paperheight,%
+      % \Oldincludegraphics[width=\paperwidth,height=\paperheight,%
+      keepaspectratio]{$letterhead$}%
+      \vfill
+    }
+  }
+}
+$endif$
+
+\usepackage[
+  unicode=true,
+	plainpages=false,
+	pdfpagelabels,
+	]{hyperref}
+
+%\hoffset = -1in
+%\textwidth = 8.5in
+%\paperwidth = 8.5in
+
+\renewcommand{\section}[1]{{\LARGE #1}}
+\newcommand{\subsection}[1]{{\large #1}}
+
+\newlfmP{addrt=$recipient$,
+  noLines,
+  closeskipafter=0pt,
+  sigsize=0pt,
+  leftmarginsize=.6in,
+  rightmarginsize=.6in,
+  textwidthsize=7in,
+  headermarginsize=.25in,
+  % headermarginsize=.75in},
+  textheightsize=10.25in,
+  addrf=$from$}
+
+$if(date)$
+  \dateset{$date$}
+$else$
+  \dateset{\today}
+$endif$
+
+\begin{document}
+  $if(letterhead)$
+    \AddToShipoutPicture*{\BackgroundPic}
+  $endif$
+  
+  \begin{newlfm}
+    $if(salutation)$
+      $salutation$
+    $endif$
+
+    $body$
+
+  \end{newlfm}
+\end{document}
